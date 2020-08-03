@@ -20,12 +20,21 @@ var mapImgWidth = 512*2,
 var numText;
 
 var order = [];
-var bestRoute = [];
+var bestEver = [];
+var currentBest = [];
+var prevDist = Infinity;
 var recordDist = Infinity;
+var eliteInd = [];
 
-var popSize = 300;
+var generation = 0;
+var convergeGeneration = 0;
+var maxGeneration = 600; //600
+var popSize = 500; //2500
 var population = [];  // populations of many orders
 var fitness = [];  //fitness score for every order of population
+var crossoverRate = 0.85;
+var mutationRate = 0.25;
+var generationGap = 0.25;
 
 
 function preload() {  
@@ -48,7 +57,7 @@ function setup() {
   
   
   // set headers
-  setHeaders();
+  //setHeaders();
   
   // update input to default value first
   updateNumCities();
@@ -57,16 +66,14 @@ function setup() {
   selectCities();  
   
   
-  //Generate population
+  //Generate initial population
   for (var i = 0; i < popSize; i++) {
     population[i] = shuffle(order);
   }
   //console.log(population);
   
-  
-  
-  
-  
+  numElite = floor(population.length * generationGap);
+  console.log(numElite); 
   
 }
 
@@ -75,19 +82,42 @@ function draw() {
   imageMode(CENTER);
   image(mapImage, 0, 0);
   
-  // GA 
+  // Genetic Algorithm 
   calculateFitness();
   normalizeFitness();
-  nextGeneration(); 
   
+  //elite num
+  
+  eliteInd = findIndicesOfMax(fitness, numElite);
+  //console.log('elite: ' + eliteInd);                         
+  nextGeneration(); 
    
   
   // Draw city dots on a map  
+  
   drawDots();
   
   // draw best routes
-  drawRoute(bestRoute, "purple", 4);  
+  drawRoute(bestEver, "magenta", 1);  
   
+  // draw current best routes
+  //drawRoute(currentBest, "white", 1);  
+  
+  //print the results
+  noStroke();
+  fill(80, 200);
+  printResults();
+  
+  generation++;    
+  if (Math.abs(prevDist - recordDist > 0.001)) {
+    convergeGeneration = generation;
+  }
+  
+  if (generation > maxGeneration) {
+    noLoop();    
+  }
+   
+  prevDist = recordDist;
     
 }
 
@@ -108,7 +138,6 @@ function processJSON(data) {
   }  
   
 }
-
 
 // set headers and buttons
 function setHeaders() {
@@ -134,9 +163,9 @@ function setHeaders() {
   //console.log(numTextPos);  
   
   // input text box
-  inputBox = createInput('20');
+  inputBox = createInput('6');
   inputBox.position(header1Pos.left + 130, header1Pos.bottom + 25);
-  inputBox.size(25);  
+  inputBox.size(50);  
   //console.log(inputBox.x, inputBox.width);
   
   // submit button
@@ -156,7 +185,8 @@ function setHeaders() {
  
 // update inputs when submitted
 function updateNumCities() {    
-    numCities = parseInt(inputBox.value());    
+    //numCities = parseInt(inputBox.value());    
+    numCities = 25; 
 }
 
 //Select n cities
@@ -174,9 +204,35 @@ function selectCities() {
       order.push(index);
       index++;
     }
-  }
+  }  
 }
 
+
+//print results
+function printResults() {
+  var offset = -430;
+  var indent = -425;
+  var top = 35;
+  
+  textStyle(BOLD);  
+  text("Genetic Algorithm Parameters:", offset, top + 60);
+  textStyle(NORMAL);
+  text("*  Generations: " + generation, indent, top + 80);
+  text("*  Population size: " + popSize + " individuals", indent, top + 100);
+  text("*  Crossover rate: " + crossoverRate*100 + "%", indent, top + 120);
+  text("*  Mutation rate: " + mutationRate*100 + "%", indent, top + 140);
+  text("*  Elitism generation gap: " + numElite + " individuals", indent, top + 160);
+  
+  textStyle(BOLD);
+  text("Convergence at generation: " + convergeGeneration, offset, top + 190);
+  if (generation >= maxGeneration) {
+    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]" + " : max. number of iterations reached", offset, top + 205);
+  } else {
+    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]", offset, top + 205);
+  }
+
+  
+}
 
 //submit button function
 // function updateInput() {
@@ -230,9 +286,9 @@ function drawDots() {
     var y = webMercatorY(lat) - cy;
     strokeWeight(1);
     //fill(255, 0, 0);
-    noFill();
+    //noFill();
     //console.log(lon, x)
-    ellipse(x, y, 8, 8);
+    ellipse(x, y, 6, 6);
   }
 }
 
@@ -245,7 +301,7 @@ function drawRoute(order, col, strw) {
   var cx = webMercatorX(clon);
   var cy = webMercatorY(clat);
   
-  for (var i = 0, l = bestRoute.length; i < l; ++i) {
+  for (var i = 0, l = bestEver.length; i < l; ++i) {
     
     var n = order[i];
     var lon = longitudes[n];
