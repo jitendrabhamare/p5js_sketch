@@ -56,8 +56,8 @@ function setup() {
   console.log(mapImgWidth, mapImgHeight);
   console.log(windowWidth, windowHeight);
   console.log(width, height);
-  var x = (windowWidth - width) / 4;
-  var y = (windowHeight - height) / 4;
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
   mycanvas.position(x, y);  
   
   // set headers
@@ -139,7 +139,7 @@ function processJSON(data) {
 // set headers and buttons
 function setHeaders() {
   
-  var elementX = 0;
+  var elementX = 10;
   var elementY = 50
   nameP1 = createP('Traveling Salesman Problem');
   nameP1.position(elementX, elementY);
@@ -307,7 +307,7 @@ function webMercatorY(lat) {
 
 //print results
 function printResults() {
-  var offset = -450;
+  var offset = -480;
   var indent = offset + 5;
   var top = 25;
   
