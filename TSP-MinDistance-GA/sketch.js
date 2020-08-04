@@ -1,7 +1,7 @@
 var mycanvas;
 var allCities;  // 98 cities
 var numCities;
-var maxCities = 50;  // Limit for BruteForce method
+var maxCities = 50;  
 var allLongitudes = [],
     allLatitudes = [],
     allCityNames = [];
@@ -56,8 +56,8 @@ function setup() {
   console.log(mapImgWidth, mapImgHeight);
   console.log(windowWidth, windowHeight);
   console.log(width, height);
-  var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2 ;
+  var x = (windowWidth - width) / 4;
+  var y = (windowHeight - height) / 4;
   mycanvas.position(x, y);  
   
   // set headers
@@ -139,7 +139,7 @@ function processJSON(data) {
 // set headers and buttons
 function setHeaders() {
   
-  var elementX = 10;
+  var elementX = 0;
   var elementY = 50
   nameP1 = createP('Traveling Salesman Problem');
   nameP1.position(elementX, elementY);
