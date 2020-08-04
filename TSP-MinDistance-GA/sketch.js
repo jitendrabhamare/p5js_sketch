@@ -1,7 +1,7 @@
 var mycanvas;
 var allCities;  // 98 cities
 var numCities;
-var maxCities = 50;  
+var maxCities = 50;  // Limit for BruteForce method
 var allLongitudes = [],
     allLatitudes = [],
     allCityNames = [];
@@ -57,7 +57,7 @@ function setup() {
   console.log(windowWidth, windowHeight);
   console.log(width, height);
   var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2;
+  var y = (windowHeight - height) / 2 ;
   mycanvas.position(x, y);  
   
   // set headers
@@ -139,32 +139,33 @@ function processJSON(data) {
 // set headers and buttons
 function setHeaders() {
   
-  var elementX = 10;
-  var elementY = 50
+  var elementX = windowWidth/2 - 120;
+  var elementY = 40
   nameP1 = createP('Traveling Salesman Problem');
   nameP1.position(elementX, elementY);
-  nameP1.style('fontSize', '25px');
+  //nameP1.style('align-content', "center");
+  nameP1.style('fontSize', '27px');
   
   nameP2 = createP('Traveling to the highlighted cities in the US' );
   nameP2.position(elementX, elementY + 40);
   
   
   numCityText = createElement('p', 'Number of Cities:');
-  numCityText.position(windowWidth/2, elementY + 20);
+  numCityText.position(windowWidth/2 - 60, elementY + 60);
   
   numCityRange = createElement('p', '(In range of 1 to 50)');
-  numCityRange.position(windowWidth/2, elementY + 40);
+  numCityRange.position(windowWidth/2 - 60, elementY + 80);
   numCityRange.style('fontSize', '12px');
   
   
   // input text box
   inputBox = createInput('25');  
-  inputBox.position(windowWidth/2 + 130, elementY + 36);
+  inputBox.position(windowWidth/2 + 70, elementY + 76);
   inputBox.size(25);  
   
   // submit button  
   button = createButton('Submit');
-  button.position(inputBox.x + inputBox.width + 5, elementY + 36);
+  button.position(inputBox.x + inputBox.width + 5, elementY + 76);
   button.style('border',  "none");
   button.style('color',  "white");
   button.style('padding', "3px 12px");
@@ -173,6 +174,8 @@ function setHeaders() {
   button.mousePressed(updateInput); 
   
 }
+
+
   
  
 // update inputs when submitted
@@ -307,7 +310,7 @@ function webMercatorY(lat) {
 
 //print results
 function printResults() {
-  var offset = -480;
+  var offset = -450;
   var indent = offset + 5;
   var top = 25;
   
