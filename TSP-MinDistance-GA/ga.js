@@ -1,3 +1,19 @@
+// Genetic Algorithm 
+function runGA() {
+  
+  // Fitness
+  calculateFitness();
+  normalizeFitness();  
+  
+  // Find indices of fitness array of Elite elements
+  eliteInd = findIndicesOfMax(fitness, numElite);  
+  
+  //Move to next Gen
+  nextGeneration(); 
+  
+  //console.log('GA done');
+}
+
 //Calculate fitness score
 function calculateFitness() { 
   var currentRecord = Infinity;

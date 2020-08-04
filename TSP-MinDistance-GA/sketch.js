@@ -1,7 +1,7 @@
 var mycanvas;
 var allCities;  // 98 cities
 var numCities;
-var maxCities = 10;  // Limit for BruteForce method
+var maxCities = 50;  // Limit for BruteForce method
 var allLongitudes = [],
     allLatitudes = [],
     allCityNames = [];
@@ -28,8 +28,8 @@ var eliteInd = [];
 
 var generation = 0;
 var convergeGeneration = 0;
-var maxGeneration = 600; //600
-var popSize = 500; //2500
+var maxGeneration = 600;
+var popSize = 2500;
 var population = [];  // populations of many orders
 var fitness = [];  //fitness score for every order of population
 var crossoverRate = 0.85;
@@ -49,15 +49,19 @@ function preload() {
 }
 
 
-function setup() {
-  mycanvas = createCanvas(mapImgWidth, mapImgHeight);
-  var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2 - 20;
-  mycanvas.position(x, y);
+function setup() {  
   
+  //Img Canvass
+  mycanvas = createCanvas(mapImgWidth, mapImgHeight);
+  console.log(mapImgWidth, mapImgHeight);
+  console.log(windowWidth, windowHeight);
+  console.log(width, height);
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2 ;
+  mycanvas.position(x, y);  
   
   // set headers
-  //setHeaders();
+  setHeaders();
   
   // update input to default value first
   updateNumCities();
@@ -73,7 +77,7 @@ function setup() {
   //console.log(population);
   
   numElite = floor(population.length * generationGap);
-  console.log(numElite); 
+  //console.log(numElite); 
   
 }
 
@@ -83,22 +87,13 @@ function draw() {
   image(mapImage, 0, 0);
   
   // Genetic Algorithm 
-  calculateFitness();
-  normalizeFitness();
+  runGA();   
   
-  //elite num
-  
-  eliteInd = findIndicesOfMax(fitness, numElite);
-  //console.log('elite: ' + eliteInd);                         
-  nextGeneration(); 
-   
-  
-  // Draw city dots on a map  
-  
+  // Draw city dots on a map    
   drawDots();
   
   // draw best routes
-  drawRoute(bestEver, "magenta", 1);  
+  drawRoute(bestEver, "DarkRed", 1);  
   
   // draw current best routes
   //drawRoute(currentBest, "white", 1);  
@@ -108,11 +103,13 @@ function draw() {
   fill(80, 200);
   printResults();
   
+  // Keep track of generations and record coverge generation
   generation++;    
   if (Math.abs(prevDist - recordDist > 0.001)) {
     convergeGeneration = generation;
   }
   
+  // Stop loop once reached to maxGen
   if (generation > maxGeneration) {
     noLoop();    
   }
@@ -142,51 +139,46 @@ function processJSON(data) {
 // set headers and buttons
 function setHeaders() {
   
-  //h1 = createElement('h1', 'TSP Distance Calculator');  
+  var elementX = 10;
+  var elementY = 50
+  nameP1 = createP('Traveling Salesman Problem');
+  nameP1.position(elementX, elementY);
+  nameP1.style('fontSize', '25px');
   
-  // Set header text
-  var header1 = document.getElementById("header1");
-  var text1 = "Traveling Salesman Problem Distance Calculator";
-  header1.innerText = text1;  
-  //var textWidth = getWidthOfText(text, "Arial", "15px");
-  header1.style.fontSize = "20px";
-  header1.style.fontFamily = "Arial"  
-  var textHeight = (header1.clientHeight + 1) + "px";
-  var textWidth = (header1.clientWidth + 1) + "px";  
-  header1.style.left = window.innerWidth / 2 - textWidth / 2 + "px";  
-  var header1Pos = header1.getBoundingClientRect();
-  //console.log(header1Pos.top, header1Pos.right, header1Pos.bottom, header1Pos.left);
+  nameP2 = createP('Traveling to the highlighted cities in the US' );
+  nameP2.position(elementX, elementY + 40);
   
-  numText = createElement('p', 'Number of Cities:');  
-  numText.position(header1Pos.left, header1Pos.bottom + 10);
-  //var numTextPos = numText.getBoundingClientRect();  
-  //console.log(numTextPos);  
+  
+  numCityText = createElement('p', 'Number of Cities:');
+  numCityText.position(windowWidth/2, elementY + 20);
+  
+  numCityRange = createElement('p', '(In range of 1 to 50)');
+  numCityRange.position(windowWidth/2, elementY + 40);
+  numCityRange.style('fontSize', '12px');
+  
   
   // input text box
-  inputBox = createInput('6');
-  inputBox.position(header1Pos.left + 130, header1Pos.bottom + 25);
-  inputBox.size(50);  
-  //console.log(inputBox.x, inputBox.width);
+  inputBox = createInput('25');  
+  inputBox.position(windowWidth/2 + 130, elementY + 36);
+  inputBox.size(25);  
   
-  // submit button
-  button = createButton('submit');
-  button.position(inputBox.x + inputBox.width + 5, header1Pos.bottom + 25);
-  //button.mousePressed(updateInput);
-  
-
-  var header2 = document.getElementById("header2");
-  var text2 = "Traveling to the highlighted cities in the US";
-  header2.innerText = text2;    
-  header2.style.fontSize = "15px";
-  header2.style.fontFamily = "Arial"      
+  // submit button  
+  button = createButton('Submit');
+  button.position(inputBox.x + inputBox.width + 5, elementY + 36);
+  button.style('border',  "none");
+  button.style('color',  "white");
+  button.style('padding', "3px 12px");
+  button.style('cursor', "pointer");
+  button.style('background-color', "#2196F3"); //blue   
+  button.mousePressed(updateInput); 
   
 }
   
  
 // update inputs when submitted
 function updateNumCities() {    
-    //numCities = parseInt(inputBox.value());    
-    numCities = 25; 
+    numCities = parseInt(inputBox.value());    
+    //numCities = 25; 
 }
 
 //Select n cities
@@ -208,70 +200,52 @@ function selectCities() {
 }
 
 
-//print results
-function printResults() {
-  var offset = -430;
-  var indent = -425;
-  var top = 35;
-  
-  textStyle(BOLD);  
-  text("Genetic Algorithm Parameters:", offset, top + 60);
-  textStyle(NORMAL);
-  text("*  Generations: " + generation, indent, top + 80);
-  text("*  Population size: " + popSize + " individuals", indent, top + 100);
-  text("*  Crossover rate: " + crossoverRate*100 + "%", indent, top + 120);
-  text("*  Mutation rate: " + mutationRate*100 + "%", indent, top + 140);
-  text("*  Elitism generation gap: " + numElite + " individuals", indent, top + 160);
-  
-  textStyle(BOLD);
-  text("Convergence at generation: " + convergeGeneration, offset, top + 190);
-  if (generation >= maxGeneration) {
-    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]" + " : max. number of iterations reached", offset, top + 205);
-  } else {
-    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]", offset, top + 205);
-  }
-
-  
-}
 
 //submit button function
-// function updateInput() {
-//   console.log(inputBox.value(), allCities);
-//   if (inputBox.value() > maxCities) {
-//     console.log("value should be less than or equal to " + maxCities);
-//     return
-//   }
+function updateInput() {
+  console.log(inputBox.value(), allCities);
+  if ((inputBox.value() > maxCities) || (inputBox.value()) <= 0) {
+    warnText = "Number of cities should be between 1 and " + maxCities + ".";
+    return
+  }
   
-//   updateNumCities();
-//   console.log("input updated to " + numCities);
-  
-  
-//   // reset variables
-//   longitudes = [];
-//   latitudes = [];
-//   cityNames = [];
-//   order = [];
-//   counter = 0;
-  
-//   //choose 'inpuBox.value()' cities randomly from 98 cities  
-//   selectCities();
-//   //console.log("new cities " + cityNames);
-//   console.log(order);
-  
-//   // Update recordDist and bestRoute  
-//   var d = calcDist(longitudes, latitudes, order);  
-//   recordDist = d;
-//   bestRoute = order.slice();
-//   //console.log(bestRoute, order)
-  
-//   // Update total permutations
-//   totalPermutations = factorial(numCities);
-//   console.log(numCities, totalPermutations);
+  updateNumCities();
+  console.log("input updated to " + numCities);
   
   
-//   //start loop, just in case prev finished with noloop() executed.
-//   loop();
-// }
+  // reset variables
+  longitudes = [];
+  latitudes = [];
+  cityNames = [];
+  order = [];
+  bestEver = [];
+  currentBest = [];
+  prevDist = Infinity;
+  recordDist = Infinity;
+  eliteInd = [];
+  generation = 0;
+  convergeGeneration = 0;
+  fitness = [];
+  population = [];    
+  
+  
+  //choose 'inpuBox.value()' cities randomly from 98 cities  
+  selectCities();
+  //console.log("new cities " + cityNames);
+  //console.log(order);
+  
+    
+  //Generate initial population
+  for (var i = 0; i < popSize; i++) {
+    population[i] = shuffle(order);
+  }
+  console.log(population.length);
+  
+  numElite = floor(population.length * generationGap);
+    
+  //start loop, just in case prev finished with noloop() executed.
+  loop();
+}
 
 // draw dots
 function drawDots() {
@@ -330,7 +304,33 @@ function webMercatorY(lat) {
   var c = Math.PI - Math.log(b);
   return a * c;
 }
+
+//print results
+function printResults() {
+  var offset = -450;
+  var indent = offset + 5;
+  var top = 25;
   
+  textStyle(BOLD);  
+  text("Genetic Algorithm Parameters:", offset, top + 60);
+  textStyle(NORMAL);
+  text("*  No. of Cities: " + numCities + " (input size)", indent, top + 80);
+  text("*  Generations: " + generation, indent, top + 100);
+  text("*  Population size: " + popSize + " individuals", indent, top + 120);
+  text("*  Crossover rate: " + crossoverRate*100 + "%", indent, top + 140);
+  text("*  Mutation rate: " + mutationRate*100 + "%", indent, top + 160);
+  text("*  Elitism generation gap: " + numElite + " individuals", indent, top + 180);
+  
+  textStyle(BOLD);
+  text("Convergence at generation: " + convergeGeneration, offset, top + 205);
+  if (generation >= maxGeneration) {
+    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]" + " : max. number of iterations reached", offset, top + 225);
+  } else {
+    text("Total distance travelled: " + nf(recordDist, 0, 2) + " km [Haversine distance]", offset, top + 225);
+  }
+  
+}
+
   
 // Calculate total distance between cities based on an order 
 function calcDist(lon, lat, order) {
