@@ -19,3 +19,7 @@ This project demonstrates the use of a genetic algorithm to find an optimised so
 - Haversine Distance Formula:
 http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 - Map from MapBox: https://www.mapbox.com/api-documentation/#retrieve-a-sprite-image-or-json
+
+## Visualization
+<kbd><img src="https://github.com/jitendrabhamare/p5js_sketch/blob/gh-pages/TSP-MinDistance-GA/TSP-GA-Viz.gif" alt="TSP-GA-gif" width="800"/></kbd>
+
