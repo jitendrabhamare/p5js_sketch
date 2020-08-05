@@ -57,7 +57,7 @@ function setup() {
   console.log(windowWidth, windowHeight);
   console.log(width, height);
   var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2 ;
+  var y = (windowHeight - height) / 2 + 10 ;
   mycanvas.position(x, y);  
   
   // set headers
@@ -139,32 +139,32 @@ function processJSON(data) {
 // set headers and buttons
 function setHeaders() {
   
-  var elementX = windowWidth/2 - 120;
-  var elementY = 40
-  nameP1 = createP('Traveling Salesman Problem');
-  nameP1.position(elementX, elementY);
-  //nameP1.style('align-content', "center");
-  nameP1.style('fontSize', '27px');
+  var elementX = windowWidth/2 - 270;
+  var elementY = 15
+  // nameP1 = createP('Traveling Salesman Problem');
+  // nameP1.position(elementX, elementY);
+  // //nameP1.style('align-content', "center");
+  // nameP1.style('fontSize', '27px');
   
-  nameP2 = createP('Traveling to the highlighted cities in the US' );
+  nameP2 = createP('Find shortest possible route that visits each selected city in the US using Genetic Algorithm.' );
   nameP2.position(elementX, elementY + 40);
   
   
   numCityText = createElement('p', 'Number of Cities:');
-  numCityText.position(windowWidth/2 - 60, elementY + 60);
+  numCityText.position(windowWidth/2 - 100, elementY + 60);
   
   numCityRange = createElement('p', '(In range of 1 to 50)');
-  numCityRange.position(windowWidth/2 - 60, elementY + 80);
+  numCityRange.position(windowWidth/2 - 100, elementY + 80);
   numCityRange.style('fontSize', '12px');
   
   
   // input text box
   inputBox = createInput('25');  
-  inputBox.position(windowWidth/2 + 70, elementY + 76);
+  inputBox.position(windowWidth/2 + 30, elementY + 76);
   inputBox.size(25);  
   
   // submit button  
-  button = createButton('Submit');
+  button = createButton('Run');
   button.position(inputBox.x + inputBox.width + 5, elementY + 76);
   button.style('border',  "none");
   button.style('color',  "white");
