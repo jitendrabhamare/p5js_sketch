@@ -11,7 +11,7 @@ var longitudes = [],
 var pitch = 0;
 var clat = 38.27;
 var clon = -101.7431;
-var zoom = 3.45;
+var zoom = 3.3;
 
 var mapImg;
 var mapImgWidth = 512*2, 
@@ -29,7 +29,7 @@ var eliteInd = [];
 var generation = 0;
 var convergeGeneration = 0;
 var maxGeneration = 600;
-var popSize = 2500;
+var popSize = 2700;
 var population = [];  // populations of many orders
 var fitness = [];  //fitness score for every order of population
 var crossoverRate = 0.85;
