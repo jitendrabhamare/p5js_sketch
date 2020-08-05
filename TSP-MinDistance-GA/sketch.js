@@ -160,7 +160,7 @@ function setHeaders() {
   
   // input text box
   inputBox = createInput('25');  
-  inputBox.position(windowWidth/2 + 30, elementY + 76);
+  inputBox.position(windowWidth/2 + 36, elementY + 76);
   inputBox.size(25);  
   
   // submit button  
