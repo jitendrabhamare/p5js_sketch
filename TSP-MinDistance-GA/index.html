@@ -1,28 +1,54 @@
-<!DOCTYPE html><html lang="en"><head>
-  <title> Traveling Salesman Problem Visualizer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="p5.js"></script>
-  <script src="p5.sound.min.js"></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <meta charset="utf-8">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Min Distance - Genetic Algorithm</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 </head>
-
-
 <body>
-  <div class="topnav" id="myTopnav">
-    <!--<a href="#" class="active">Home</a>-0-->
-    <!--<a href="https://github.com/jitendrabhamare/p5js_sketch/tree/gh-pages/TSP-MinDistance-GA">ReadMe</a>-->
+    <header>
+        <h1>Traveling Salesman Problem</h1>
+        <p>Find the shortest route visiting selected U.S. cities using Genetic Algorithm</p>
+        <div class="controls">
+            <label for="city-count">Number of Cities: </label>
+            <input type="number" id="city-count" min="1" max="50" value="25" style="width: 50px;">
+            <span>(1 to 50)</span>
+            <button id="run-btn">Run</button>
+        </div>
+    </header>
+    <main>
+        <div class="card">
+            <div class="canvas-container">
+                <div id="sketch-holder"></div>
+            </div>
+            <div class="controls">
+                <button id="restart-btn">Restart Simulation</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Created by <a href="https://github.com/jitendrabhamare">Jitendra Bhamare</a></p>
+    </footer>
+    <script src="sketch.js"></script>
+    <script>
+        // Run button functionality
+        document.getElementById('run-btn').addEventListener('click', () => {
+            updateInput();
+        });
 
-    <a href="#">Traveling Salesman Problem</a>
-
-    
-  </div>
-  
-  <script src="ga.js"></script>
-  <script src="sketch.js"></script>
-
-
-</body></html>
+        // Restart button functionality
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            if (typeof resetSketch === 'function') {
+                resetSketch();
+            } else {
+                console.log("Please define resetSketch() in sketch.js to reset the simulation.");
+            }
+        });
+    </script>
+</body>
+</html>
