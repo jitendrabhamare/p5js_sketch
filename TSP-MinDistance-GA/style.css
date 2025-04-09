@@ -1,72 +1,246 @@
-html,
-body {
-  height: 100%
+/* Reset default styles */
+* {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
 }
 
-/* Add a black background color to the top navigation */
-.topnav {
-  background-color: #333;
+/* Body styling */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+  color: #2d3436;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Header styling */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1e272e;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1rem;
+  color: #636e72;
+  font-weight: 400;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+header .controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+
+header input[type="number"] {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+header button#run-btn {
+  padding: 6px 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2196F3;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+header button#run-btn:hover {
+  background-color: #1976D2;
+}
+
+/* Main content styling */
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* Card styling */
+.card {
+  background-color: transparent;
+  
+  border-radius: 15px;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+}
+
+/* .card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+} */
+
+
+/* Canvas container */
+.canvas-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  width: 100%;
+  /* Remove max-width to allow full expansion, use min-width instead */
+  min-width: 1024px; /* Match mapImgWidth as minimum */
+  position: relative;
+  /* Remove overflow: hidden to prevent clipping */
+  overflow: visible; /* Allow content to extend if needed */
+  margin-bottom: 8px;
+}
+
+#sketch-holder {
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+
+
+/* Controls styling */
+.controls {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#restart-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #0984e3;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  z-index: 2;
+  margin-top: -20px; /* shift upward */
+}
+
+#restart-btn:hover {
+  background-color: #0652dd;
+  transform: translateY(-2px);
+}
+
+#restart-btn:active {
+  transform: translateY(0);
+}
+
+/* Footer styling */
+footer {
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: #636e72;
+  text-align: center;
+}
+
+footer a {
+  color: #0984e3;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header h1 {
+      font-size: 1.8rem;
+  }
+  header p {
+      font-size: 0.9rem;
+  }
+  header .controls {
+      flex-direction: column;
+      gap: 5px;
+  }
+  header input[type="number"] {
+      width: 60px;
+  }
+  .card {
+      max-width: 90%;
+      padding: 15px;
+  }
+  .canvas-container {
+      min-width: 100%; /* Allow full width on smaller screens, but ensure min 1024px */
+      padding: 10px;
+  }
+  #sketch-holder {
+      max-width: none; /* Remove max-width constraint */
+  }
+  #restart-btn {
+      width: 80%;
+      padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+      font-size: 1.5rem;
+  }
+  header p {
+      font-size: 0.85rem;
+  }
+  body {
+      padding: 15px;
+  }
+  .card {
+      padding: 10px;
+  }
+  header .controls {
+      flex-direction: column;
+      gap: 5px;
+  }
+  header input[type="number"] {
+      width: 50px;
+  }
+  .canvas-container {
+      min-width: 100%; /* Full width, but min 1024px will still apply */
+      padding: 5px;
+  }
+  #restart-btn {
+      width: 90%;
+      padding: 8px;
+      font-size: 0.9rem;
+  }
+}
+
+html, body {
+  height: 100vh;
   overflow: hidden;
 }
 
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: center;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 25px;
+main {
+  flex-grow: 1;
+  overflow-y: auto; /* Allow map area to scroll if it needs to */
 }
 
-/* Change the color of links on hover */
-.topnav a:hover {
-  background-color: #008B8B;
-  /*color: black;*/
-}
-
-/* Add an active class to highlight the current page */
-.topnav a.active {
-  background-color: #4CAF50;
-  color: white;
-}
-
-/* Hide the link that should open and close the topnav on small screens */
-.topnav .icon {
-  display: none;
-}
-
-.btn {
-  border: none;
-  color: white;
-  padding: 14px 28px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.submit {background-color: #2196F3;} /* Blue */
-.submit:hover {background: #0b7dda;}
-
-p {
-    position: absolute;
-    top: 0;
-    color: #5a5a5a;
-    font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
-}
-
-#header1 {
-    top: 15px;
-    font-size: 20px;    
-}
-#header2 {
-    top: 40px;
-    font-size: 13px;
-}
-#header3 {
-    top: 40px;
-    font-size: 13px;
+footer {
+  flex-shrink: 0;
+  margin-top: 10px;
 }
